@@ -16,10 +16,11 @@
                 <MenuItem Header="Spiel">
                     <MenuItem Header="Neustarten" Click="Restart"/>
                     <MenuItem Header="Importieren" Click="ImportXML"/>
+                    <MenuItem Header="Aus String" Click="MenuItem_Click_AusString"/>
                 </MenuItem>
                 <MenuItem Header="Hilfe">
-                    <MenuItem Header="Anleitung"/>
-                    <MenuItem Header="Über"/>
+                    <MenuItem Header="Anleitung" Click="MenuItem_Click_Anleitung"/>
+                    <MenuItem Header="Über" Click="MenuItem_Click_Ueber"/>
                 </MenuItem>
             </Menu>
         </Grid>
@@ -92,11 +93,8 @@
             </Border>
             <Grid Grid.Column="1">
                 <Canvas x:Name="CanvasBackground" HorizontalAlignment="Center" VerticalAlignment="Center" RenderSize="100,100" Panel.ZIndex="-1">
-                    <Canvas x:Name="CanvasGrid" HorizontalAlignment="Center" VerticalAlignment="Center" RenderSize="100,100" Panel.ZIndex="1" MouseLeftButtonDown="CanvasGrid_MouseLeftButtonDown">
-
-                    </Canvas>
+                    <Canvas x:Name="CanvasGrid" HorizontalAlignment="Center" VerticalAlignment="Center" RenderSize="100,100" Panel.ZIndex="1" MouseLeftButtonDown="CanvasGrid_MouseLeftButtonDown"/>
                 </Canvas>
-
             </Grid>
         </Grid>
     </Grid>

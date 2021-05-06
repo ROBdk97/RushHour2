@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:RushHour2"
         mc:Ignorable="d"
         WindowStyle="ToolWindow"
+        ResizeMode="NoResize"
         Title="Erfolg" Height="100" Width="250">
     <Grid>
         <Grid.RowDefinitions>

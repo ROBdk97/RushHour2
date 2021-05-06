@@ -24,6 +24,12 @@ namespace RushHour2
     {
         private ViewModel viewModel;
         private bool grid = false;
+
+        private SolidColorBrush selectedColor = new SolidColorBrush(Colors.Red);
+        private SolidColorBrush mainColor = new SolidColorBrush(Colors.Blue);
+        private SolidColorBrush targetColor = new SolidColorBrush(Colors.DarkViolet);
+
+
         public MainWindow()
         {
             viewModel = new ViewModel(this);
@@ -121,7 +127,7 @@ namespace RushHour2
         private void drawWinRectangle()
         {
             System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle();
-            rect.Fill = new SolidColorBrush(Colors.Gold);
+            rect.Fill = targetColor;
             rect.Opacity = .5;
             rect.Width = viewModel.Mod * 1;
             rect.Height = viewModel.Mod * 1;
@@ -152,7 +158,7 @@ namespace RushHour2
             if (first)
             {
                 System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle();
-                rect.Fill = new SolidColorBrush(Colors.Blue);
+                rect.Fill = mainColor;
                 rect.Opacity = .5;
                 rect.Width = viewModel.Mod * fahrzeug.Width();
                 rect.Height = viewModel.Mod * fahrzeug.Heigth();
@@ -163,7 +169,7 @@ namespace RushHour2
             if (sel)
             {
                 System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle();
-                rect.Fill = new SolidColorBrush(Colors.Red);
+                rect.Fill = selectedColor;
                 rect.Opacity = .5;
                 rect.Width = viewModel.Mod * fahrzeug.Width();
                 rect.Height = viewModel.Mod * fahrzeug.Heigth();
@@ -202,6 +208,23 @@ namespace RushHour2
         private void ImportXML(object sender, RoutedEventArgs e)
         {
             viewModel.ImportXML();
+        }
+
+        private void MenuItem_Click_AusString(object sender, RoutedEventArgs e)
+        {
+            viewModel.FahrzeugeAusString();
+        }
+
+        private void MenuItem_Click_Anleitung(object sender, RoutedEventArgs e)
+        {
+            Anleitung_Window anleitung_Window = new Anleitung_Window();
+            anleitung_Window.Show();
+        }
+
+        private void MenuItem_Click_Ueber(object sender, RoutedEventArgs e)
+        {
+            Ueber_Window ueberWindow = new Ueber_Window();
+            ueberWindow.Show();
         }
     }
 }

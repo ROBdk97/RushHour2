@@ -5,7 +5,11 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace RushHour2
 {
@@ -27,22 +31,32 @@ namespace RushHour2
             Spiele = new List<XML.Spiel>();
             ReloadXML();
         }
-        /// <summary>
-        /// 2,3,2,0;4,1,2,1
-        /// </summary>
+
         public void FahrzeugeAusString()
         {
             XML.Spiel spiel = new XML.Spiel();
             spiel.Fahrzeug = new List<XML.FahrzeugX>();
-            foreach (string s1 in FahrzeugeString.Split(';'))
-            {
-                string[] s2 = s1.Split(',');
-                XML.FahrzeugX f = new XML.FahrzeugX(int.Parse(s2[0]), int.Parse(s2[1]), int.Parse(s2[2]), s2[3]);
-                spiel.Fahrzeug.Add(f);
-            }
+            string[] txt = new string[6];
+            txt[0] = "<Fahrzeug>";
+            txt[1] = "<X>2</X>";
+            txt[2] = "<Y>2</Y>";
+            txt[3] = "<Laenge>2</Laenge>";
+            txt[4] = "<Ausrichtung>r</Ausrichtung>";
+            txt[5] = "</Fahrzeug>";
+
+            string s = "<?xml version=\"1.0\" ?>" + string.Join("", txt);
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(s);
+            XmlSerializer xs = new XmlSerializer(typeof(XML.FahrzeugX));
+            XML.FahrzeugX fahrzeug = (XML.FahrzeugX)xs.Deserialize(new StringReader(doc.OuterXml));
+            spiel.Fahrzeug.Add(fahrzeug);
+            spiel.ConvertFahreuge();
             Spiele.Add(spiel);
             SelG = Spiele.Count - 1;
             main.aktuallisiereSpielfeld();
+
+            string x = Regex.Replace(s, "<*>", "");
+            Console.WriteLine(x);
         }
 
         public bool Geloest()
@@ -50,7 +64,7 @@ namespace RushHour2
             if (Sel == 0)
             {
                 Fahrzeug meinFahrzeug = GetCurrentFahrzeug();
-                foreach(Point p in meinFahrzeug.getPos())
+                foreach (Point p in meinFahrzeug.getPos())
                 {
                     if (p.X == 5 && p.Y == 2) return true;
                 }
@@ -168,6 +182,8 @@ namespace RushHour2
 
         public List<Fahrzeug> GetCurrentFahrzeuge()
         {
+            if (SelG > Spiele.Count - 1)
+                SelG = Spiele.Count - 1;
             return Spiele[SelG].Fahrzeuge;
         }
         public Fahrzeug GetCurrentFahrzeug()
