@@ -88,7 +88,7 @@ namespace RushHour2
 
         private void GamePlus(object sender, RoutedEventArgs e)
         {
-            if (viewModel.SelG < viewModel.Spiele.Count-1)
+            if (viewModel.SelG < viewModel.Spiele.Count - 1)
             {
                 viewModel.SelG++;
                 viewModel.Sel = 0;
@@ -96,8 +96,9 @@ namespace RushHour2
             }
         }
 
-        public void aktuallisiereSpielfeld()
+        public void aktuallisiereSpielfeld(bool newGrid = false)
         {
+            if (newGrid) grid = false;
             DrawRectangles(CanvasBackground);
             CanvasGrid.Children.Clear();
             CanvasGrid.Width = viewModel.Mod * viewModel.GridSize;
@@ -120,7 +121,7 @@ namespace RushHour2
                 erfolgWindow.DataContext = viewModel;
                 erfolgWindow.ShowDialog();
                 viewModel.Moves = 0;
-                GamePlus(null,null);
+                GamePlus(null, null);
             }
         }
 
@@ -148,8 +149,8 @@ namespace RushHour2
             double y = fahrzeug.getPos()[0].Y;
             if (fahrzeug.Direction == "u" || fahrzeug.Direction == "r")
             {
-                x= fahrzeug.getPos()[fahrzeug.getPos().Length-1].X;
-                y = fahrzeug.getPos()[fahrzeug.getPos().Length-1].Y;
+                x = fahrzeug.getPos()[fahrzeug.getPos().Length - 1].X;
+                y = fahrzeug.getPos()[fahrzeug.getPos().Length - 1].Y;
             }
 
             Canvas.SetLeft(image, viewModel.Mod * x);
@@ -183,6 +184,7 @@ namespace RushHour2
         {
             if (!grid)
             {
+                MyCanvas.Children.RemoveRange(1, MyCanvas.Children.Count - 1);
                 MyCanvas.Width = viewModel.Mod * viewModel.GridSize;
                 MyCanvas.Height = viewModel.Mod * viewModel.GridSize;
                 for (int j = 0; j < viewModel.GridSize; j++)
@@ -233,6 +235,12 @@ namespace RushHour2
         {
             CanvasGrid.Children.Remove(StartButton);
             aktuallisiereSpielfeld();
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            viewModel.Mod =(int) (this.ActualHeight * 0.6 / viewModel.GridSize);
+            //Console.WriteLine(this.ActualWidth * 0.71428571428f / viewModel.GridSize);
         }
     }
 }

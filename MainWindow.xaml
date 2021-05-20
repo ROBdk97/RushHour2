@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:RushHour2"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
+        SizeChanged="Window_SizeChanged"
         Title="RushHour" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -45,27 +46,27 @@
                                 </Grid.RowDefinitions>
                                 <TextBlock Text="Fahrzeug Steuerung"  Height="20" TextAlignment="Center" Grid.Row="0" Grid.ColumnSpan="3" FontWeight="Bold"/>
                                 <Grid Width="75" Height="50" Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Button Click="GoUp" Height="25" Width="25" Grid.Row="0" Grid.Column="1">
-                                    <Image Source="/Ressourcen/ArrowUp.png"/>
-                                </Button>
-                                <Button Click="GoDown" Height="25" Width="25" Grid.Row="1" Grid.Column="1">
-                                    <Image Source="/Ressourcen/ArrowDown.png" />
-                                </Button>
-                                <Button Click="GoRight" Height="25" Width="25" Grid.Row="1" Grid.Column="2">
-                                    <Image Source="/Ressourcen/ArrowRight.png"/>
-                                </Button>
-                                <Button Click="GoLeft" Height="25" Width="25" Grid.Row="1" Grid.Column="0">
-                                    <Image Source="/Ressourcen/ArrowLeft.png"/>
-                                </Button>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Button Click="GoUp" Height="25" Width="25" Grid.Row="0" Grid.Column="1">
+                                        <Image Source="/Ressourcen/ArrowUp.png"/>
+                                    </Button>
+                                    <Button Click="GoDown" Height="25" Width="25" Grid.Row="1" Grid.Column="1">
+                                        <Image Source="/Ressourcen/ArrowDown.png" />
+                                    </Button>
+                                    <Button Click="GoRight" Height="25" Width="25" Grid.Row="1" Grid.Column="2">
+                                        <Image Source="/Ressourcen/ArrowRight.png"/>
+                                    </Button>
+                                    <Button Click="GoLeft" Height="25" Width="25" Grid.Row="1" Grid.Column="0">
+                                        <Image Source="/Ressourcen/ArrowLeft.png"/>
+                                    </Button>
                                 </Grid>
                             </Grid>
                         </Border>

@@ -8,6 +8,6 @@ namespace RushHour2
 {
     public interface IMainWindow
     {
-        void aktuallisiereSpielfeld();
+        void aktuallisiereSpielfeld(bool newGrid = false);
     }
 }

@@ -8,12 +8,14 @@
         ResizeMode="NoResize"
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterOwner"
-        Title="Anleitung" Height="200" Width="820">
+        Title="Anleitung" Height="210" Width="820">
     <Grid>
         <TextBlock FontSize="18" Margin="5" VerticalAlignment="Center">
             Bewegen sie das Blaue Fahrzeug auf das Dunkelviolette Rechteck um das Level abzuschließen.
             <LineBreak/>
             Hierzu selektieren Sie ein Fahrzeug und benutzen das Steuerkreuz oben links um dieses zu bewegen.
+            <LineBreak/>
+            Das selektierte Fahrzeug wird rot dargestellt.
             <LineBreak/>
             Fahrzeuge können nur Vorwärts und Rückwärts fahren und nicht das Spielfeld verlassen.
             <LineBreak/>

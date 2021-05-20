@@ -281,7 +281,7 @@ namespace RushHour2
         public int Moves { get => moves; set { moves = value; OnPropertyChanged(nameof(Moves)); } }
         public int SelG { get => selg; set { selg = value; OnPropertyChanged(nameof(SelG)); } }
         public List<XML.Spiel> Spiele { get => spiele; set { spiele = value; OnPropertyChanged(nameof(Spiele)); } }
-        public int Mod { get => mod; set { mod = value; OnPropertyChanged(nameof(Mod)); main.aktuallisiereSpielfeld(); } }
+        public int Mod { get => mod; set { mod = value; OnPropertyChanged(nameof(Mod)); main.aktuallisiereSpielfeld(true); } }
         public int GridSize { get => gridSize; set { gridSize = value; OnPropertyChanged(nameof(GridSize)); main.aktuallisiereSpielfeld(); } }
 
         #region 
