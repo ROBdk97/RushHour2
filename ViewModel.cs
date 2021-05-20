@@ -54,9 +54,6 @@ namespace RushHour2
             Spiele.Add(spiel);
             SelG = Spiele.Count - 1;
             main.aktuallisiereSpielfeld();
-
-            string x = Regex.Replace(s, "<*>", "");
-            Console.WriteLine(x);
         }
 
         public bool Geloest()

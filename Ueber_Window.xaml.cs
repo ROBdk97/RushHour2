@@ -23,5 +23,15 @@ namespace RushHour2
         {
             InitializeComponent();
         }
+
+        private void Button_Click_URL_ROB(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://rob-games.zapto.org/");
+        }
+
+        private void Button_Click_URL_Schule(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.berufliche-schulen-bretten.de/");
+        }
     }
 }

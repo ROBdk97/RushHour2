@@ -5,8 +5,50 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RushHour2"
         mc:Ignorable="d"
-        Title="Über" Height="450" Width="800">
-    <Grid>
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Title="Über" Height="250" Width="250">
+    <Grid VerticalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
         
+        <Image Source="/Ressourcen/Parkplatzsymbol.png" Grid.Row="0" Grid.Column="0"/>
+        <TextBlock Grid.Row="0" Text="RushHour das Spiel" FontWeight="Bold" FontSize="15" Grid.Column="1" VerticalAlignment="Center" Margin="5"/>
+
+        <TextBlock Text="Erstellt von:" Grid.ColumnSpan="2" VerticalAlignment="Center" Grid.Row="1" FontSize="15"/>
+
+        <Button Click="Button_Click_URL_ROB"  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid Width="240">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Image Source="/Ressourcen/ROB.jpg" Margin="0" Grid.Column="0"/>
+                <TextBlock Text="ROBdk97" VerticalAlignment="Center" Margin="5" FontWeight="Bold" FontSize="15" Grid.Column="1"/>
+            </Grid>
+        </Button>
+        
+        <TextBlock Text="Erstellt für:" Grid.ColumnSpan="2" VerticalAlignment="Center" Grid.Row="3" FontSize="15"/>
+        
+        <Button Click="Button_Click_URL_Schule"  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid Width="240">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Image Source="/Ressourcen/BSB_LOGOsmall.jpg" Margin="0" Grid.Column="0"/>
+                <TextBlock Text="BSB-Bretten" VerticalAlignment="Center" Margin="5" FontWeight="Bold" FontSize="15" Grid.Column="1"/>
+            </Grid>
+        </Button>
+
     </Grid>
 </Window>

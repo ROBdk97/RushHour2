@@ -128,7 +128,7 @@ namespace RushHour2
         {
             System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle();
             rect.Fill = targetColor;
-            rect.Opacity = .5;
+            rect.Opacity = .75;
             rect.Width = viewModel.Mod * 1;
             rect.Height = viewModel.Mod * 1;
             Canvas.SetLeft(rect, viewModel.Mod * 5);
@@ -218,13 +218,21 @@ namespace RushHour2
         private void MenuItem_Click_Anleitung(object sender, RoutedEventArgs e)
         {
             Anleitung_Window anleitung_Window = new Anleitung_Window();
+            anleitung_Window.Owner = this;
             anleitung_Window.Show();
         }
 
         private void MenuItem_Click_Ueber(object sender, RoutedEventArgs e)
         {
             Ueber_Window ueberWindow = new Ueber_Window();
+            ueberWindow.Owner = this;
             ueberWindow.Show();
+        }
+
+        private void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            CanvasGrid.Children.Remove(StartButton);
+            aktuallisiereSpielfeld();
         }
     }
 }

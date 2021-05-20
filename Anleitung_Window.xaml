@@ -5,8 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RushHour2"
         mc:Ignorable="d"
-        Title="Anleitung" Height="450" Width="800">
+        ResizeMode="NoResize"
+        WindowStyle="ToolWindow"
+        WindowStartupLocation="CenterOwner"
+        Title="Anleitung" Height="200" Width="820">
     <Grid>
-        
+        <TextBlock FontSize="18" Margin="5" VerticalAlignment="Center">
+            Bewegen sie das Blaue Fahrzeug auf das Dunkelviolette Rechteck um das Level abzuschließen.
+            <LineBreak/>
+            Hierzu selektieren Sie ein Fahrzeug und benutzen das Steuerkreuz oben links um dieses zu bewegen.
+            <LineBreak/>
+            Fahrzeuge können nur Vorwärts und Rückwärts fahren und nicht das Spielfeld verlassen.
+            <LineBreak/>
+            Versuchen sie dabei so wenig Schritte wie Möglich zu brauchen.
+            <LineBreak/>
+            Nach dem Abschluss werden sie darüber informiert wie viele Schritte sie benötigt haben und können
+            <LineBreak/>
+            dann weiter zum nächsten Level.
+        </TextBlock>
     </Grid>
 </Window>

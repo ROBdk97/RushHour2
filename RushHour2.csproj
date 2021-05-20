@@ -140,5 +140,11 @@
     <Resource Include="Ressourcen\pkw_up.bmp" />
     <EmbeddedResource Include="Ressourcen\spiel.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Ressourcen\ROB.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Ressourcen\BSB_LOGOsmall.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

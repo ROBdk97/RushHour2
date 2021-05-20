@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RushHour2"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="RushHour" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -93,7 +94,9 @@
             </Border>
             <Grid Grid.Column="1">
                 <Canvas x:Name="CanvasBackground" HorizontalAlignment="Center" VerticalAlignment="Center" RenderSize="100,100" Panel.ZIndex="-1">
-                    <Canvas x:Name="CanvasGrid" HorizontalAlignment="Center" VerticalAlignment="Center" RenderSize="100,100" Panel.ZIndex="1" MouseLeftButtonDown="CanvasGrid_MouseLeftButtonDown"/>
+                    <Canvas x:Name="CanvasGrid" HorizontalAlignment="Center" VerticalAlignment="Center" RenderSize="100,100" Panel.ZIndex="1" MouseLeftButtonDown="CanvasGrid_MouseLeftButtonDown">
+                        <Button x:Name="StartButton" Content="Start" Click="StartButton_Click" Width="150" Height="75" TextBlock.FontSize="25" Canvas.Left="-65" Canvas.Top="-40" Grid.Column="1"/>
+                    </Canvas>
                 </Canvas>
             </Grid>
         </Grid>
