@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Color = System.Drawing.Color;
 
 namespace RushHour2
 {
@@ -122,6 +112,7 @@ namespace RushHour2
                 erfolgWindow.ShowDialog();
                 viewModel.Moves = 0;
                 GamePlus(null, null);
+                viewModel.Text = "";
             }
         }
 

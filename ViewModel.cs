@@ -5,8 +5,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
@@ -16,7 +14,6 @@ namespace RushHour2
     public class ViewModel : INotifyPropertyChanged
     {
         private string text = "";
-        private string fahrzeugeString = "2,3,2,o;4,1,2,u;5,5,2,l;3,7,3,r";
         private int sel = 0;
         private int selg = 0;
         private int mod = 70;
@@ -276,7 +273,6 @@ namespace RushHour2
 
 
         public string Text { get => text; set { text = value; OnPropertyChanged(nameof(Text)); } }
-        public string FahrzeugeString { get => fahrzeugeString; set { fahrzeugeString = value; OnPropertyChanged(nameof(FahrzeugeString)); } }
         public int Sel { get => sel; set { sel = value; OnPropertyChanged(nameof(Sel)); } }
         public int Moves { get => moves; set { moves = value; OnPropertyChanged(nameof(Moves)); } }
         public int SelG { get => selg; set { selg = value; OnPropertyChanged(nameof(SelG)); } }
@@ -284,7 +280,7 @@ namespace RushHour2
         public int Mod { get => mod; set { mod = value; OnPropertyChanged(nameof(Mod)); main.aktuallisiereSpielfeld(true); } }
         public int GridSize { get => gridSize; set { gridSize = value; OnPropertyChanged(nameof(GridSize)); main.aktuallisiereSpielfeld(); } }
 
-        #region 
+        #region PropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
