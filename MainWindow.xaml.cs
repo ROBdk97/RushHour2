@@ -233,5 +233,27 @@ namespace RushHour2
             viewModel.Mod =(int) (this.ActualHeight * 0.6 / viewModel.GridSize);
             //Console.WriteLine(this.ActualWidth * 0.71428571428f / viewModel.GridSize);
         }
+        
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {               
+                case Key.W:
+                    GoUp(null,null);
+                    break;
+                case Key.S:
+                    GoDown(null, null);
+                    break;
+                case Key.A:
+                    GoLeft(null, null);
+                    break;
+                case Key.D:
+                    GoRight(null, null);
+                    break;
+                case Key.R:
+                    Restart(null, null);
+                    break;               
+            }
+        }
     }
 }
