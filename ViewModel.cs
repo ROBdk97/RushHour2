@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -11,9 +12,11 @@ using System.Xml.Serialization;
 
 namespace RushHour2
 {
-    public class ViewModel : INotifyPropertyChanged
+    public class ViewModel : BaseModel
     {
+        #region private
         private string text = "";
+        private string username = "user";
         private int sel = 0;
         private int selg = 0;
         private int mod = 70;
@@ -21,18 +24,56 @@ namespace RushHour2
         private List<XML.Spiel> spiele;
         private IMainWindow main;
         private int moves = 0;
+        private DateTime startTime;
+        public ObservableCollection<Score> scores;
+        private readonly string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\ROBdk97\\RushHour\\ScoreBoard.xml";
+        #endregion private
+
+        #region properties
+        public string Text { get => text; set { text = value; OnPropertyChanged(); } }
+        public string Username { get => username; set { username = value; OnPropertyChanged(); } }
+        public int Sel { get => sel; set { sel = value; OnPropertyChanged(); } }
+        public int Moves { get => moves; set { moves = value; OnPropertyChanged(); } }
+        public int SelG { get => selg; set { selg = value; OnPropertyChanged(); OnPropertyChanged(nameof(Scores)); } }
+        public List<XML.Spiel> Spiele { get => spiele; set { spiele = value; OnPropertyChanged(); } }
+        public int Mod { get => mod; set { mod = value; OnPropertyChanged(); main.aktuallisiereSpielfeld(true); } }
+        public int GridSize { get => gridSize; set { gridSize = value; OnPropertyChanged(); main.aktuallisiereSpielfeld(); } }
+        public ObservableCollection<Score> Scores { get => new ObservableCollection<Score>(scores.Where(x => x.Lvl==SelG).OrderBy(z=> z.Moves)); set { scores = value; OnPropertyChanged(); } }
+        #endregion properties
 
         public ViewModel(IMainWindow _main)
         {
             main = _main;
             Spiele = new List<XML.Spiel>();
+            Scores = LoadScoreBoard();
             ReloadXML();
+        }
+
+        private ObservableCollection<Score> LoadScoreBoard()
+        {
+            if (!File.Exists(path)) return new ObservableCollection<Score>();
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Score>));
+            using (StreamReader reader = new StreamReader(path))
+            {
+                return (ObservableCollection<Score>)serializer.Deserialize(reader);
+            }
+        }
+        public void SaveScoreBoard()
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<Score>));
+            if (!File.Exists(path)) Directory.CreateDirectory(Path.GetDirectoryName(path));
+            using(StreamWriter writer = new StreamWriter(path))
+            {
+                xmlSerializer.Serialize(writer, scores);
+            }
         }
 
         public void FahrzeugeAusString()
         {
-            XML.Spiel spiel = new XML.Spiel();
-            spiel.Fahrzeug = new List<XML.FahrzeugX>();
+            XML.Spiel spiel = new XML.Spiel
+            {
+                Fahrzeug = new List<XML.FahrzeugX>()
+            };
             string[] txt = new string[6];
             txt[0] = "<Fahrzeug>";
             txt[1] = "<X>2</X>";
@@ -58,7 +99,7 @@ namespace RushHour2
             if (Sel == 0)
             {
                 Fahrzeug meinFahrzeug = GetCurrentFahrzeug();
-                foreach (Point p in meinFahrzeug.getPos())
+                foreach (Point p in meinFahrzeug.GetPosition())
                 {
                     if (p.X == 5 && p.Y == 2) return true;
                 }
@@ -69,11 +110,13 @@ namespace RushHour2
         internal void ImportXML()
         {
             var assembly = Assembly.GetExecutingAssembly();
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.InitialDirectory = "c:\\";
-            fileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
-            fileDialog.FilterIndex = 2;
-            fileDialog.RestoreDirectory = true;
+            OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                InitialDirectory = "c:\\",
+                Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*",
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
             if (fileDialog.ShowDialog() == true)
             {
                 Spiele = XMLHelper.LoadXML(fileDialog.OpenFile());
@@ -84,26 +127,44 @@ namespace RushHour2
             }
         }
 
-        public void forwards()
+        public void Finished()
+        {
+            Score score = new Score()
+            {
+                Date = DateTime.Today,
+                Lvl = SelG,
+                Moves = Moves,
+                Time = DateTime.Now - startTime,
+                Username = Username
+            };
+            scores.Add(score);
+        }
+
+        public void StartTime()
+        {
+            startTime = DateTime.Now;
+        }
+
+        public void Forwards()
         {
             Out("Try Forward:");
             if (isMoveAllowed(GetCurrentFahrzeug(), false))
             {
-                Out(pointToString(GetCurrentFahrzeug().getPos(), Sel));
-                GetCurrentFahrzeug().forward();
-                Out(pointToString(GetCurrentFahrzeug().getPos(), Sel));
+                Out(PointToString(GetCurrentFahrzeug().GetPosition(), Sel));
+                GetCurrentFahrzeug().Forwards();
+                Out(PointToString(GetCurrentFahrzeug().GetPosition(), Sel));
                 Text += "---------------\n";
                 moves++;
             }
         }
-        public void backwards()
+        public void Backwards()
         {
             Out("Try Backwards:");
             if (isMoveAllowed(GetCurrentFahrzeug(), true))
             {
-                Out(pointToString(GetCurrentFahrzeug().getPos(), Sel));
-                GetCurrentFahrzeug().backwards();
-                Out(pointToString(GetCurrentFahrzeug().getPos(), Sel));
+                Out(PointToString(GetCurrentFahrzeug().GetPosition(), Sel));
+                GetCurrentFahrzeug().Backwards();
+                Out(PointToString(GetCurrentFahrzeug().GetPosition(), Sel));
                 Text += "---------------\n";
                 moves++;
             }
@@ -111,7 +172,7 @@ namespace RushHour2
 
         public bool isMoveAllowed(Fahrzeug fahrzeug, bool forwards)
         {
-            foreach (Point p in fahrzeug.getPos())
+            foreach (Point p in fahrzeug.GetPosition())
             {
                 if (forwards)
                 {
@@ -202,7 +263,7 @@ namespace RushHour2
             Text += text + "\n";
         }
 
-        private string pointToString(Point[] koor, int i)
+        private string PointToString(Point[] koor, int i)
         {
             string s = "Pos Fahrzeug" + i + ":\n";
             foreach (Point point in koor)
@@ -222,7 +283,7 @@ namespace RushHour2
             {
                 spiel.ConvertFahreuge();
             }
-            //Spiele[0].Fahrzeuge.Add(new Fahrzeug(new Point(0,0),1,"o"));
+            startTime = DateTime.Now;
         }
 
         public void SetCurrentFahrzeug(Point p)
@@ -232,7 +293,7 @@ namespace RushHour2
             int i = 0;
             foreach (Fahrzeug f in GetCurrentFahrzeuge())
             {
-                foreach (Point pf in f.getPos())
+                foreach (Point pf in f.GetPosition())
                 {
                     if (pf.X == x && pf.Y == y)
                     {
@@ -245,59 +306,30 @@ namespace RushHour2
             }
         }
 
-        public void Move(direction dir)
+        public void Move(Direction dir)
         {
             switch (dir)
             {
-                case direction.up:
-                    if (GetCurrentFahrzeug().Direction == "u") backwards();
-                    if (GetCurrentFahrzeug().Direction == "o") forwards();
+                case Direction.Up:
+                    if (GetCurrentFahrzeug().Direction == "u") Backwards();
+                    if (GetCurrentFahrzeug().Direction == "o") Forwards();
                     break;
-                case direction.down:
-                    if (GetCurrentFahrzeug().Direction == "o") backwards();
-                    if (GetCurrentFahrzeug().Direction == "u") forwards();
+                case Direction.Down:
+                    if (GetCurrentFahrzeug().Direction == "o") Backwards();
+                    if (GetCurrentFahrzeug().Direction == "u") Forwards();
                     break;
-                case direction.right:
-                    if (GetCurrentFahrzeug().Direction == "r") forwards();
-                    if (GetCurrentFahrzeug().Direction == "l") backwards();
+                case Direction.Right:
+                    if (GetCurrentFahrzeug().Direction == "r") Forwards();
+                    if (GetCurrentFahrzeug().Direction == "l") Backwards();
                     break;
-                case direction.left:
-                    if (GetCurrentFahrzeug().Direction == "l") forwards();
-                    if (GetCurrentFahrzeug().Direction == "r") backwards();
+                case Direction.Left:
+                    if (GetCurrentFahrzeug().Direction == "l") Forwards();
+                    if (GetCurrentFahrzeug().Direction == "r") Backwards();
                     break;
                 default:
                     Console.WriteLine("Move error");
                     break;
             }
-        }
-
-
-        public string Text { get => text; set { text = value; OnPropertyChanged(nameof(Text)); } }
-        public int Sel { get => sel; set { sel = value; OnPropertyChanged(nameof(Sel)); } }
-        public int Moves { get => moves; set { moves = value; OnPropertyChanged(nameof(Moves)); } }
-        public int SelG { get => selg; set { selg = value; OnPropertyChanged(nameof(SelG)); } }
-        public List<XML.Spiel> Spiele { get => spiele; set { spiele = value; OnPropertyChanged(nameof(Spiele)); } }
-        public int Mod { get => mod; set { mod = value; OnPropertyChanged(nameof(Mod)); main.aktuallisiereSpielfeld(true); } }
-        public int GridSize { get => gridSize; set { gridSize = value; OnPropertyChanged(nameof(GridSize)); main.aktuallisiereSpielfeld(); } }
-
-        #region PropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        #endregion
-
-        public enum direction
-        {
-            up,
-            down,
-            left,
-            right
         }
     }
 }

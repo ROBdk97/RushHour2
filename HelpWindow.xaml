@@ -1,4 +1,4 @@
-﻿<Window x:Class="RushHour2.Anleitung_Window"
+﻿<Window x:Class="RushHour2.HelpWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,22 +8,39 @@
         ResizeMode="NoResize"
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterOwner"
-        Title="Anleitung" Height="210" Width="820">
+        Title="Hilfe" Height="300" Width="560">
     <Grid>
-        <TextBlock FontSize="18" Margin="5" VerticalAlignment="Center">
-            Bewegen sie das Blaue Fahrzeug auf das Dunkelviolette Rechteck um das Level abzuschließen.
+        <TextBlock FontSize="12" Margin="5" VerticalAlignment="Center">
+            <Bold>Spielprinzip:</Bold>
             <LineBreak/>
-            Hierzu selektieren Sie ein Fahrzeug und benutzen das Steuerkreuz oben links um dieses zu bewegen.
+            Bewegen sie das Blaue Fahrzeug auf das Dunkelviolette Feld um das Level abzuschließen.
+            <LineBreak/>
+            Hierzu selektieren Sie ein Fahrzeug und benutzen das Steuerkreuz oder Tasten um dieses zu bewegen.
             <LineBreak/>
             Das selektierte Fahrzeug wird rot dargestellt.
             <LineBreak/>
-            Fahrzeuge können nur Vorwärts und Rückwärts fahren und nicht das Spielfeld verlassen.
+            Fahrzeuge können nur Vorwärts oder Rückwärts fahren und dabei nicht das Spielfeld verlassen.
             <LineBreak/>
             Versuchen sie dabei so wenig Schritte wie Möglich zu brauchen.
             <LineBreak/>
             Nach dem Abschluss werden sie darüber informiert wie viele Schritte sie benötigt haben und können
             <LineBreak/>
             dann weiter zum nächsten Level.
+            <LineBreak/>
+            <LineBreak/>
+            <Bold>Steuerung:</Bold>
+            <LineBreak/>
+            W:  Nach Oben
+            <LineBreak/>
+            S:  Nach Unten
+            <LineBreak/>
+            A:  Nach Links
+            <LineBreak/>
+            D:  Nach rechts
+            <LineBreak/>
+            R:  Neustarten
+            <LineBreak/>
+            H:  Hilfe
         </TextBlock>
     </Grid>
 </Window>

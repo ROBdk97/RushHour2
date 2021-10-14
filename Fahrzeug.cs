@@ -30,11 +30,11 @@ namespace RushHour2
                 }
             }
         }
-        public Point[] getPos()
+        public Point[] GetPosition()
         {
             return koord;
         }
-        public void forward()
+        public void Forwards()
         {
             for (int i = 0; i < koord.Length; i++)
             {
@@ -56,7 +56,7 @@ namespace RushHour2
             }
         }
 
-        public void backwards()
+        public void Backwards()
         {
             for (int i = 0; i < koord.Length; i++)
             {

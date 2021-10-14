@@ -17,9 +17,9 @@ namespace RushHour2
     /// <summary>
     /// Interaktionslogik für Anleitung_Window.xaml
     /// </summary>
-    public partial class Anleitung_Window : Window
+    public partial class HelpWindow : Window
     {
-        public Anleitung_Window()
+        public HelpWindow()
         {
             InitializeComponent();
         }

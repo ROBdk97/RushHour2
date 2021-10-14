@@ -59,20 +59,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Anleitung_Window.xaml.cs">
-      <DependentUpon>Anleitung_Window.xaml</DependentUpon>
+    <Compile Include="BaseModel.cs" />
+    <Compile Include="DiectionEnum.cs" />
+    <Compile Include="HelpWindow.xaml.cs">
+      <DependentUpon>HelpWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Erfolg.xaml.cs">
       <DependentUpon>Erfolg.xaml</DependentUpon>
     </Compile>
     <Compile Include="Fahrzeug.cs" />
     <Compile Include="IMainWindow.cs" />
+    <Compile Include="Score.cs" />
     <Compile Include="Ueber_Window.xaml.cs">
       <DependentUpon>Ueber_Window.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel.cs" />
     <Compile Include="XMLClass.cs" />
-    <Page Include="Anleitung_Window.xaml">
+    <Page Include="HelpWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

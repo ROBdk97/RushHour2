@@ -19,6 +19,8 @@ namespace RushHour2
         private SolidColorBrush mainColor = new SolidColorBrush(Colors.Blue);
         private SolidColorBrush targetColor = new SolidColorBrush(Colors.DarkViolet);
 
+        private HelpWindow helpWindow;
+
 
         public MainWindow()
         {
@@ -37,25 +39,25 @@ namespace RushHour2
 
         private void GoUp(object sender, RoutedEventArgs e)
         {
-            viewModel.Move(ViewModel.direction.up);
+            viewModel.Move(Direction.Up);
             aktuallisiereSpielfeld();
         }
 
         private void GoDown(object sender, RoutedEventArgs e)
         {
-            viewModel.Move(ViewModel.direction.down);
+            viewModel.Move(Direction.Down);
             aktuallisiereSpielfeld();
         }
 
         private void GoRight(object sender, RoutedEventArgs e)
         {
-            viewModel.Move(ViewModel.direction.right);
+            viewModel.Move(Direction.Right);
             aktuallisiereSpielfeld();
         }
 
         private void GoLeft(object sender, RoutedEventArgs e)
         {
-            viewModel.Move(ViewModel.direction.left);
+            viewModel.Move(Direction.Left);
             aktuallisiereSpielfeld();
         }
 
@@ -63,6 +65,7 @@ namespace RushHour2
         {
             viewModel.ReloadXML();
             viewModel.Moves = 0;
+            viewModel.StartTime();
             aktuallisiereSpielfeld();
         }
 
@@ -98,37 +101,43 @@ namespace RushHour2
             foreach (Fahrzeug fahrzeug in viewModel.GetCurrentFahrzeuge())
             {
                 bool sel = i == viewModel.Sel ? true : false;
-                gibFahrzeug(fahrzeug, sel, first);
+                GibFahrzeug(fahrzeug, sel, first);
                 if (first) first = false;
                 i++;
             }
-            drawWinRectangle();
+            DrawWinRectangle();
             if (viewModel.Geloest())
             {
-                Erfolg erfolgWindow = new Erfolg();
-                erfolgWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                erfolgWindow.Owner = this;
-                erfolgWindow.DataContext = viewModel;
+                viewModel.Finished();
+                Erfolg erfolgWindow = new Erfolg
+                {
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                    Owner = this,
+                    DataContext = viewModel                  
+                };
                 erfolgWindow.ShowDialog();
+                viewModel.StartTime();
                 viewModel.Moves = 0;
                 GamePlus(null, null);
                 viewModel.Text = "";
             }
         }
 
-        private void drawWinRectangle()
+        private void DrawWinRectangle()
         {
-            System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle();
-            rect.Fill = targetColor;
-            rect.Opacity = .75;
-            rect.Width = viewModel.Mod * 1;
-            rect.Height = viewModel.Mod * 1;
+            System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle
+            {
+                Fill = targetColor,
+                Opacity = .75,
+                Width = viewModel.Mod * 1,
+                Height = viewModel.Mod * 1
+            };
             Canvas.SetLeft(rect, viewModel.Mod * 5);
             Canvas.SetTop(rect, viewModel.Mod * 2);
             CanvasGrid.Children.Add(rect);
         }
 
-        private void gibFahrzeug(Fahrzeug fahrzeug, bool sel, bool first)
+        private void GibFahrzeug(Fahrzeug fahrzeug, bool sel, bool first)
         {
             System.Windows.Controls.Image image = new System.Windows.Controls.Image
             {
@@ -136,12 +145,12 @@ namespace RushHour2
                 Height = viewModel.Mod * fahrzeug.Heigth(),
                 Source = new BitmapImage(new Uri("/Ressourcen/" + fahrzeug.GetImageUri(), UriKind.Relative))
             };
-            double x = fahrzeug.getPos()[0].X;
-            double y = fahrzeug.getPos()[0].Y;
+            double x = fahrzeug.GetPosition()[0].X;
+            double y = fahrzeug.GetPosition()[0].Y;
             if (fahrzeug.Direction == "u" || fahrzeug.Direction == "r")
             {
-                x = fahrzeug.getPos()[fahrzeug.getPos().Length - 1].X;
-                y = fahrzeug.getPos()[fahrzeug.getPos().Length - 1].Y;
+                x = fahrzeug.GetPosition()[fahrzeug.GetPosition().Length - 1].X;
+                y = fahrzeug.GetPosition()[fahrzeug.GetPosition().Length - 1].Y;
             }
 
             Canvas.SetLeft(image, viewModel.Mod * x);
@@ -149,22 +158,26 @@ namespace RushHour2
             CanvasGrid.Children.Add(image);
             if (first)
             {
-                System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle();
-                rect.Fill = mainColor;
-                rect.Opacity = .5;
-                rect.Width = viewModel.Mod * fahrzeug.Width();
-                rect.Height = viewModel.Mod * fahrzeug.Heigth();
+                System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle
+                {
+                    Fill = mainColor,
+                    Opacity = .5,
+                    Width = viewModel.Mod * fahrzeug.Width(),
+                    Height = viewModel.Mod * fahrzeug.Heigth()
+                };
                 Canvas.SetLeft(rect, viewModel.Mod * x);
                 Canvas.SetTop(rect, viewModel.Mod * y);
                 CanvasGrid.Children.Add(rect);
             }
             if (sel)
             {
-                System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle();
-                rect.Fill = selectedColor;
-                rect.Opacity = .5;
-                rect.Width = viewModel.Mod * fahrzeug.Width();
-                rect.Height = viewModel.Mod * fahrzeug.Heigth();
+                System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle
+                {
+                    Fill = selectedColor,
+                    Opacity = .5,
+                    Width = viewModel.Mod * fahrzeug.Width(),
+                    Height = viewModel.Mod * fahrzeug.Heigth()
+                };
                 Canvas.SetLeft(rect, viewModel.Mod * x);
                 Canvas.SetTop(rect, viewModel.Mod * y);
                 CanvasGrid.Children.Add(rect);
@@ -210,15 +223,15 @@ namespace RushHour2
 
         private void MenuItem_Click_Anleitung(object sender, RoutedEventArgs e)
         {
-            Anleitung_Window anleitung_Window = new Anleitung_Window();
-            anleitung_Window.Owner = this;
-            anleitung_Window.Show();
+            ShowHelp();
         }
 
         private void MenuItem_Click_Ueber(object sender, RoutedEventArgs e)
         {
-            Ueber_Window ueberWindow = new Ueber_Window();
-            ueberWindow.Owner = this;
+            Ueber_Window ueberWindow = new Ueber_Window
+            {
+                Owner = this
+            };
             ueberWindow.Show();
         }
 
@@ -233,7 +246,25 @@ namespace RushHour2
             viewModel.Mod =(int) (this.ActualHeight * 0.6 / viewModel.GridSize);
             //Console.WriteLine(this.ActualWidth * 0.71428571428f / viewModel.GridSize);
         }
-        
+
+        private void ShowHelp()
+        {
+            if (helpWindow == null)
+            {
+                helpWindow = new HelpWindow
+                {
+                    Owner = this
+                };
+                helpWindow.Show();
+                helpWindow.Closed += HelpClosed;
+            }
+        }
+
+        private void HelpClosed(object sender, EventArgs e)
+        {
+            helpWindow = null;
+        }
+
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -252,8 +283,24 @@ namespace RushHour2
                     break;
                 case Key.R:
                     Restart(null, null);
+                    break;
+                case Key.H:
+                    ShowHelp();
                     break;               
             }
+        }
+
+        private void UsernameTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                this.UpButton.Focus();
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            viewModel.SaveScoreBoard();
         }
     }
 }

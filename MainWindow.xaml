@@ -8,6 +8,7 @@
         WindowStartupLocation="CenterScreen"
         SizeChanged="Window_SizeChanged"         
         PreviewKeyDown="Window_PreviewKeyDown"
+        Closed="Window_Closed"
         Title="RushHour" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -22,7 +23,7 @@
                     <MenuItem Header="Aus String" Click="MenuItem_Click_AusString"/>
                 </MenuItem>
                 <MenuItem Header="Hilfe">
-                    <MenuItem Header="Anleitung" Click="MenuItem_Click_Anleitung"/>
+                    <MenuItem Header="Hilfe" Click="MenuItem_Click_Anleitung"/>
                     <MenuItem Header="Über" Click="MenuItem_Click_Ueber"/>
                 </MenuItem>
             </Menu>
@@ -56,7 +57,7 @@
                                         <RowDefinition/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <Button Click="GoUp" Height="25" Width="25" Grid.Row="0" Grid.Column="1">
+                                    <Button Click="GoUp" Height="25" Width="25" Grid.Row="0" Grid.Column="1" x:Name="UpButton">
                                         <Image Source="/Ressourcen/ArrowUp.png"/>
                                     </Button>
                                     <Button Click="GoDown" Height="25" Width="25" Grid.Row="1" Grid.Column="1">
@@ -78,7 +79,7 @@
                                     <RowDefinition/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <TextBox Text="Spielauswahl" Height="20" TextAlignment="Center"/>
+                                <TextBlock Text="Spielauswahl" Height="20" TextAlignment="Center"/>
                                 <Grid Grid.Row="1">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
@@ -90,8 +91,26 @@
                                 <TextBlock Text="{Binding SelG}" Height="20" TextAlignment="Center" Grid.Row="2"/>
                             </Grid>
                         </Border>
+                        <Border BorderBrush="Black" BorderThickness="1" Height="25" Padding="2">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Benutzername:" Grid.Column="0"/>
+                                <TextBox Grid.Column="1" Text="{Binding Username}" AutoWordSelection="True" KeyDown="UsernameTextBox_KeyDown"/>
+                            </Grid>
+                        </Border>
                     </StackPanel>
-                    <TextBox Text="{Binding Text}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" IsReadOnly="True" Grid.Row="1"/>
+                    <!--<TextBox Text="{Binding Text}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" IsReadOnly="True" Grid.Row="1"/>-->
+                    <DataGrid ItemsSource="{Binding Scores}"  ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Username}" Header="Spieler"/>
+                            <DataGridTextColumn Binding="{Binding Moves}" Header="Schritte"/>
+                            <DataGridTextColumn Binding="{Binding Time}" Header="Zeit"/>
+                            <DataGridTextColumn Binding="{Binding Date, StringFormat=\{0:dd.MM.yyyy\}}" Header="Tag"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </Border>
             <Grid Grid.Column="1">
