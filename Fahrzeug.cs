@@ -5,7 +5,7 @@ namespace RushHour2
     public class Fahrzeug
     {
         private Point[] koord;
-        private string direction;
+        private readonly string direction;
 
         public Fahrzeug(Point pos, int laenge, string _string)
         {

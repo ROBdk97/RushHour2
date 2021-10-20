@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,7 +12,7 @@ namespace RushHour2
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IMainWindow
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private ViewModel viewModel;
         private bool grid = false;
@@ -21,119 +23,135 @@ namespace RushHour2
 
         private HelpWindow helpWindow;
 
+        public ViewModel ViewModel { get => viewModel; set { viewModel = value; OnPropertyChanged(); } }
 
         public MainWindow()
         {
-            viewModel = new ViewModel(this);
-            this.DataContext = viewModel;
+            ViewModel = new ViewModel();
+            this.DataContext = ViewModel;
             InitializeComponent();
+            Window_SizeChanged(this, null);
         }
 
         private void CanvasGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Console.WriteLine("X:" + (int)e.GetPosition(CanvasGrid).X / viewModel.Mod + ",Y:" + (int)e.GetPosition(CanvasGrid).Y / viewModel.Mod);
-            viewModel.SetCurrentFahrzeug(e.GetPosition(CanvasGrid));
-            Console.WriteLine(viewModel.GetCurrentFahrzeug());
-            aktuallisiereSpielfeld();
+            //Console.WriteLine("X:" + (int)e.GetPosition(CanvasGrid).X / ViewModel.Mod + ",Y:" + (int)e.GetPosition(CanvasGrid).Y / ViewModel.Mod);
+            ViewModel.SetCurrentFahrzeug(e.GetPosition(CanvasGrid));
+            //Console.WriteLine(ViewModel.GetCurrentFahrzeug());
+            RedrawSpielfeld();
         }
 
         private void GoUp(object sender, RoutedEventArgs e)
         {
-            viewModel.Move(Direction.Up);
-            aktuallisiereSpielfeld();
+            ViewModel.Move(Direction.Up);
+            RedrawSpielfeld();
         }
 
         private void GoDown(object sender, RoutedEventArgs e)
         {
-            viewModel.Move(Direction.Down);
-            aktuallisiereSpielfeld();
+            ViewModel.Move(Direction.Down);
+            RedrawSpielfeld();
         }
 
         private void GoRight(object sender, RoutedEventArgs e)
         {
-            viewModel.Move(Direction.Right);
-            aktuallisiereSpielfeld();
+            ViewModel.Move(Direction.Right);
+            RedrawSpielfeld();
         }
 
         private void GoLeft(object sender, RoutedEventArgs e)
         {
-            viewModel.Move(Direction.Left);
-            aktuallisiereSpielfeld();
+            ViewModel.Move(Direction.Left);
+            RedrawSpielfeld();
         }
 
         private void Restart(object sender, RoutedEventArgs e)
         {
-            viewModel.ReloadXML();
-            viewModel.Moves = 0;
-            viewModel.StartTime();
-            aktuallisiereSpielfeld();
+            ViewModel.ReloadLevel();
+            ViewModel.Moves = 0;
+            ViewModel.StartTime();
+            RedrawSpielfeld();
+        }
+
+        private void RestartGame(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ResetProperties();
+            RedrawSpielfeld(true);
+            Window_SizeChanged(this, null);
         }
 
         private void GameMinus(object sender, RoutedEventArgs e)
         {
-            if (viewModel.SelG > 0)
+            if (ViewModel.SelG > 0)
             {
-                viewModel.SelG--;
-                viewModel.Sel = 0;
-                aktuallisiereSpielfeld();
+                ViewModel.SelG--;
+                ViewModel.SelF = 0;
+                if (ViewModel.Geloest()) ViewModel.SelG++;
+                RedrawSpielfeld();
             }
         }
 
         private void GamePlus(object sender, RoutedEventArgs e)
         {
-            if (viewModel.SelG < viewModel.Spiele.Count - 1)
+            if (ViewModel.SelG < ViewModel.Spiele.Count - 1)
             {
-                viewModel.SelG++;
-                viewModel.Sel = 0;
-                aktuallisiereSpielfeld();
+                ViewModel.SelG++;
+                ViewModel.SelF = 0;
+                RedrawSpielfeld();
             }
         }
 
-        public void aktuallisiereSpielfeld(bool newGrid = false)
+        public void RedrawSpielfeld(bool newGrid = false)
         {
             if (newGrid) grid = false;
             DrawRectangles(CanvasBackground);
             CanvasGrid.Children.Clear();
-            CanvasGrid.Width = viewModel.Mod * viewModel.GridSize;
-            CanvasGrid.Height = viewModel.Mod * viewModel.GridSize;
+            CanvasGrid.Width = ViewModel.Mod * ViewModel.GridSize;
+            CanvasGrid.Height = ViewModel.Mod * ViewModel.GridSize;
             int i = 0;
             bool first = true;
-            foreach (Fahrzeug fahrzeug in viewModel.GetCurrentFahrzeuge())
+            foreach (Fahrzeug fahrzeug in ViewModel.GetCurrentFahrzeuge())
             {
-                bool sel = i == viewModel.Sel ? true : false;
+                bool sel = i == ViewModel.SelF ? true : false;
                 GibFahrzeug(fahrzeug, sel, first);
                 if (first) first = false;
                 i++;
             }
-            DrawWinRectangle();
-            if (viewModel.Geloest())
+            DrawGrid();
+            if (ViewModel.Geloest())
             {
-                viewModel.Finished();
+                ViewModel.Finished();
                 Erfolg erfolgWindow = new Erfolg
                 {
                     WindowStartupLocation = WindowStartupLocation.CenterOwner,
                     Owner = this,
-                    DataContext = viewModel                  
+                    DataContext = ViewModel                  
                 };
                 erfolgWindow.ShowDialog();
-                viewModel.StartTime();
-                viewModel.Moves = 0;
+                ViewModel.StartTime();
+                ViewModel.Moves = 0;
                 GamePlus(null, null);
-                viewModel.Text = "";
+                ViewModel.Text = "";
+
+                if (viewModel.SelG == viewModel.Spiele.Count - 1)
+                {
+                    MessageBox.Show("Sie haben das Spiel durchgespielt!", "Gratulation!");
+                    RestartGame(this, null);
+                }
             }
         }
 
-        private void DrawWinRectangle()
+        private void DrawGrid()
         {
             System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle
             {
                 Fill = targetColor,
                 Opacity = .75,
-                Width = viewModel.Mod * 1,
-                Height = viewModel.Mod * 1
+                Width = ViewModel.Mod * 1,
+                Height = ViewModel.Mod * 1
             };
-            Canvas.SetLeft(rect, viewModel.Mod * 5);
-            Canvas.SetTop(rect, viewModel.Mod * 2);
+            Canvas.SetLeft(rect, ViewModel.Mod * 5);
+            Canvas.SetTop(rect, ViewModel.Mod * 2);
             CanvasGrid.Children.Add(rect);
         }
 
@@ -141,8 +159,8 @@ namespace RushHour2
         {
             System.Windows.Controls.Image image = new System.Windows.Controls.Image
             {
-                Width = viewModel.Mod * fahrzeug.Width(),
-                Height = viewModel.Mod * fahrzeug.Heigth(),
+                Width = ViewModel.Mod * fahrzeug.Width(),
+                Height = ViewModel.Mod * fahrzeug.Heigth(),
                 Source = new BitmapImage(new Uri("/Ressourcen/" + fahrzeug.GetImageUri(), UriKind.Relative))
             };
             double x = fahrzeug.GetPosition()[0].X;
@@ -153,8 +171,8 @@ namespace RushHour2
                 y = fahrzeug.GetPosition()[fahrzeug.GetPosition().Length - 1].Y;
             }
 
-            Canvas.SetLeft(image, viewModel.Mod * x);
-            Canvas.SetTop(image, viewModel.Mod * y);
+            Canvas.SetLeft(image, ViewModel.Mod * x);
+            Canvas.SetTop(image, ViewModel.Mod * y);
             CanvasGrid.Children.Add(image);
             if (first)
             {
@@ -162,11 +180,11 @@ namespace RushHour2
                 {
                     Fill = mainColor,
                     Opacity = .5,
-                    Width = viewModel.Mod * fahrzeug.Width(),
-                    Height = viewModel.Mod * fahrzeug.Heigth()
+                    Width = ViewModel.Mod * fahrzeug.Width(),
+                    Height = ViewModel.Mod * fahrzeug.Heigth()
                 };
-                Canvas.SetLeft(rect, viewModel.Mod * x);
-                Canvas.SetTop(rect, viewModel.Mod * y);
+                Canvas.SetLeft(rect, ViewModel.Mod * x);
+                Canvas.SetTop(rect, ViewModel.Mod * y);
                 CanvasGrid.Children.Add(rect);
             }
             if (sel)
@@ -175,11 +193,11 @@ namespace RushHour2
                 {
                     Fill = selectedColor,
                     Opacity = .5,
-                    Width = viewModel.Mod * fahrzeug.Width(),
-                    Height = viewModel.Mod * fahrzeug.Heigth()
+                    Width = ViewModel.Mod * fahrzeug.Width(),
+                    Height = ViewModel.Mod * fahrzeug.Heigth()
                 };
-                Canvas.SetLeft(rect, viewModel.Mod * x);
-                Canvas.SetTop(rect, viewModel.Mod * y);
+                Canvas.SetLeft(rect, ViewModel.Mod * x);
+                Canvas.SetTop(rect, ViewModel.Mod * y);
                 CanvasGrid.Children.Add(rect);
             }
         }
@@ -189,21 +207,21 @@ namespace RushHour2
             if (!grid)
             {
                 MyCanvas.Children.RemoveRange(1, MyCanvas.Children.Count - 1);
-                MyCanvas.Width = viewModel.Mod * viewModel.GridSize;
-                MyCanvas.Height = viewModel.Mod * viewModel.GridSize;
-                for (int j = 0; j < viewModel.GridSize; j++)
+                MyCanvas.Width = ViewModel.Mod * ViewModel.GridSize;
+                MyCanvas.Height = ViewModel.Mod * ViewModel.GridSize;
+                for (int j = 0; j < ViewModel.GridSize; j++)
                 {
-                    for (int i = 0; i < viewModel.GridSize; i++)
+                    for (int i = 0; i < ViewModel.GridSize; i++)
                     {
                         System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle
                         {
-                            Height = viewModel.Mod,
-                            Width = viewModel.Mod,
+                            Height = ViewModel.Mod,
+                            Width = ViewModel.Mod,
                         };
                         rectangle.Stroke = System.Windows.Media.Brushes.Black;
                         rectangle.Fill = System.Windows.Media.Brushes.LightGray;
-                        Canvas.SetLeft(rectangle, i * viewModel.Mod);
-                        Canvas.SetTop(rectangle, j * viewModel.Mod);
+                        Canvas.SetLeft(rectangle, i * ViewModel.Mod);
+                        Canvas.SetTop(rectangle, j * ViewModel.Mod);
                         MyCanvas.Children.Add(rectangle);
                     }
                 }
@@ -213,12 +231,13 @@ namespace RushHour2
 
         private void ImportXML(object sender, RoutedEventArgs e)
         {
-            viewModel.ImportXML();
+            ViewModel.ImportXML();
         }
 
         private void MenuItem_Click_AusString(object sender, RoutedEventArgs e)
         {
-            viewModel.FahrzeugeAusString();
+            ViewModel.FahrzeugeAusString();
+            RedrawSpielfeld(true);
         }
 
         private void MenuItem_Click_Anleitung(object sender, RoutedEventArgs e)
@@ -238,13 +257,13 @@ namespace RushHour2
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             CanvasGrid.Children.Remove(StartButton);
-            aktuallisiereSpielfeld();
+            RedrawSpielfeld();
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            viewModel.Mod =(int) (this.ActualHeight * 0.6 / viewModel.GridSize);
-            //Console.WriteLine(this.ActualWidth * 0.71428571428f / viewModel.GridSize);
+            ViewModel.Mod =(int) (this.ActualHeight * 0.6 / ViewModel.GridSize);
+            RedrawSpielfeld(true);
         }
 
         private void ShowHelp()
@@ -300,7 +319,15 @@ namespace RushHour2
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            viewModel.SaveScoreBoard();
+            ViewModel.SaveScoreBoard();
         }
+
+        #region PropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string PropertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
+        #endregion PropertyChanged
     }
 }

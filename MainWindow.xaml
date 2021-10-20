@@ -18,9 +18,10 @@
         <Grid Grid.Row="0">
             <Menu>
                 <MenuItem Header="Spiel">
-                    <MenuItem Header="Neustarten" Click="Restart"/>
-                    <MenuItem Header="Importieren" Click="ImportXML"/>
-                    <MenuItem Header="Aus String" Click="MenuItem_Click_AusString"/>
+                    <MenuItem Header="Level Neustarten" Click="Restart"/>
+                    <MenuItem Header="Spiel Neustarten" Click="RestartGame"/>
+                    <MenuItem Header="XML Importieren" Click="ImportXML"/>
+                    <MenuItem Header="Aus String Importieren" Click="MenuItem_Click_AusString"/>
                 </MenuItem>
                 <MenuItem Header="Hilfe">
                     <MenuItem Header="Hilfe" Click="MenuItem_Click_Anleitung"/>

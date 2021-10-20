@@ -15,7 +15,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
             <TextBlock Text="Level Abgeschlossen!" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="0"/>
-            <TextBlock Text="{Binding Moves,StringFormat=Benötigte Moves: {0:0}}" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="1"/>
-            <Button Content="Weiter" Click="Button_Click" Grid.Row="2"/>
+            <TextBlock Text="{Binding Moves,StringFormat=Benötigte Schritte: {0:0}}" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="1"/>
+            <Button Content="Nächstes Level" Click="Button_Click" Grid.Row="2"/>
     </Grid>
 </Window>

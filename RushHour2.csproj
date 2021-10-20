@@ -61,6 +61,7 @@
     </ApplicationDefinition>
     <Compile Include="BaseModel.cs" />
     <Compile Include="DiectionEnum.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HelpWindow.xaml.cs">
       <DependentUpon>HelpWindow.xaml</DependentUpon>
     </Compile>
@@ -68,7 +69,6 @@
       <DependentUpon>Erfolg.xaml</DependentUpon>
     </Compile>
     <Compile Include="Fahrzeug.cs" />
-    <Compile Include="IMainWindow.cs" />
     <Compile Include="Score.cs" />
     <Compile Include="Ueber_Window.xaml.cs">
       <DependentUpon>Ueber_Window.xaml</DependentUpon>

@@ -22,7 +22,6 @@ namespace RushHour2
         private int mod = 70;
         private int gridSize = 6;
         private List<XML.Spiel> spiele;
-        private IMainWindow main;
         private int moves = 0;
         private DateTime startTime;
         public ObservableCollection<Score> scores;
@@ -32,21 +31,29 @@ namespace RushHour2
         #region properties
         public string Text { get => text; set { text = value; OnPropertyChanged(); } }
         public string Username { get => username; set { username = value; OnPropertyChanged(); } }
-        public int Sel { get => sel; set { sel = value; OnPropertyChanged(); } }
+        public int SelF { get => sel; set { sel = value; OnPropertyChanged(); } }
         public int Moves { get => moves; set { moves = value; OnPropertyChanged(); } }
         public int SelG { get => selg; set { selg = value; OnPropertyChanged(); OnPropertyChanged(nameof(Scores)); } }
         public List<XML.Spiel> Spiele { get => spiele; set { spiele = value; OnPropertyChanged(); } }
-        public int Mod { get => mod; set { mod = value; OnPropertyChanged(); main.aktuallisiereSpielfeld(true); } }
-        public int GridSize { get => gridSize; set { gridSize = value; OnPropertyChanged(); main.aktuallisiereSpielfeld(); } }
+        public int Mod { get => mod; set { mod = value; } }
+        public int GridSize { get => gridSize; set { gridSize = value; OnPropertyChanged(); } }
         public ObservableCollection<Score> Scores { get => new ObservableCollection<Score>(scores.Where(x => x.Lvl==SelG).OrderBy(z=> z.Moves)); set { scores = value; OnPropertyChanged(); } }
         #endregion properties
 
-        public ViewModel(IMainWindow _main)
+        public ViewModel()
         {
-            main = _main;
             Spiele = new List<XML.Spiel>();
             Scores = LoadScoreBoard();
             ReloadXML();
+        }
+
+        public void ResetProperties()
+        {
+            ViewModel _viewModel = new ViewModel();
+            SelF = 0;
+            Moves = 0;
+            SelG = _viewModel.SelG;
+            Spiele = _viewModel.Spiele;
         }
 
         private ObservableCollection<Score> LoadScoreBoard()
@@ -91,12 +98,11 @@ namespace RushHour2
             spiel.ConvertFahreuge();
             Spiele.Add(spiel);
             SelG = Spiele.Count - 1;
-            main.aktuallisiereSpielfeld();
         }
 
         public bool Geloest()
         {
-            if (Sel == 0)
+            if (SelF == 0)
             {
                 Fahrzeug meinFahrzeug = GetCurrentFahrzeug();
                 foreach (Point p in meinFahrzeug.GetPosition())
@@ -147,24 +153,24 @@ namespace RushHour2
 
         public void Forwards()
         {
-            Out("Try Forward:");
+            //Out("Try Forward:");
             if (isMoveAllowed(GetCurrentFahrzeug(), false))
             {
-                Out(PointToString(GetCurrentFahrzeug().GetPosition(), Sel));
+                //Out(PointToString(GetCurrentFahrzeug().GetPosition(), SelF));
                 GetCurrentFahrzeug().Forwards();
-                Out(PointToString(GetCurrentFahrzeug().GetPosition(), Sel));
+                //Out(PointToString(GetCurrentFahrzeug().GetPosition(), SelF));
                 Text += "---------------\n";
                 moves++;
             }
         }
         public void Backwards()
         {
-            Out("Try Backwards:");
+            //Out("Try Backwards:");
             if (isMoveAllowed(GetCurrentFahrzeug(), true))
             {
-                Out(PointToString(GetCurrentFahrzeug().GetPosition(), Sel));
+                //Out(PointToString(GetCurrentFahrzeug().GetPosition(), SelF));
                 GetCurrentFahrzeug().Backwards();
-                Out(PointToString(GetCurrentFahrzeug().GetPosition(), Sel));
+                //Out(PointToString(GetCurrentFahrzeug().GetPosition(), SelF));
                 Text += "---------------\n";
                 moves++;
             }
@@ -243,19 +249,19 @@ namespace RushHour2
         }
         public Fahrzeug GetCurrentFahrzeug()
         {
-            return GetCurrentFahrzeuge()[Sel];
+            return GetCurrentFahrzeuge()[SelF];
         }
 
         public void Add()
         {
-            if ((Sel + 1) <= GetCurrentFahrzeuge().Count - 1)
-                Sel++;
+            if ((SelF + 1) <= GetCurrentFahrzeuge().Count - 1)
+                SelF++;
         }
 
         public void Sub()
         {
-            if ((Sel - 1) >= 0)
-                Sel--;
+            if ((SelF - 1) >= 0)
+                SelF--;
         }
 
         public void Out(string text)
@@ -274,6 +280,21 @@ namespace RushHour2
             return s;
         }
 
+        public void ReloadLevel()
+        {
+            List<XML.Spiel> games;
+            var assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream(assembly.GetManifestResourceNames().Single(file => file.EndsWith("spiel.xml"))))
+                games = XMLHelper.LoadXML(stream);
+            foreach (XML.Spiel spiel in games)
+            {
+                spiel.ConvertFahreuge();
+            }
+            if(games.Count-1==SelG)
+                Spiele[SelG] = games[SelG];
+        }
+
+
         public void ReloadXML()
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -283,7 +304,6 @@ namespace RushHour2
             {
                 spiel.ConvertFahreuge();
             }
-            startTime = DateTime.Now;
         }
 
         public void SetCurrentFahrzeug(Point p)
@@ -297,7 +317,7 @@ namespace RushHour2
                 {
                     if (pf.X == x && pf.Y == y)
                     {
-                        Sel = i;
+                        SelF = i;
                         //Console.WriteLine("Sel: " + Sel);
                         return;
                     }

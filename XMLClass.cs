@@ -69,7 +69,7 @@ namespace RushHour2.XML
     {
 
         [XmlElement(ElementName = "spiel")]
-        public List<Spiel> Spiel { get; set; }
+        public List<Spiel> Spiele { get; set; }
     }
 
 }
@@ -86,7 +86,7 @@ namespace RushHour2
             {
                 xml = (XML.RushHourXML)serializer.Deserialize(reader);
             }
-            return xml.Spiel;
+            return xml.Spiele;
         }
     }
 }
