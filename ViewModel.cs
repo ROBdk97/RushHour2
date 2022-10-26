@@ -17,27 +17,27 @@ namespace RushHour2
         #region private
         private string text = "";
         private string username = "user";
-        private int sel = 0;
-        private int selg = 0;
-        private int mod = 70;
+        private int selectedFahrzeug = 0;
+        private int selectedGame = 0;
+        private int scale = 70;
         private int gridSize = 6;
         private List<XML.Spiel> spiele;
         private int moves = 0;
         private DateTime startTime;
         public ObservableCollection<Score> scores;
-        private readonly string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\ROBdk97\\RushHour\\ScoreBoard.xml";
+        private readonly string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ROBdk97\\RushHour\\ScoreBoard.xml";
         #endregion private
 
         #region properties
         public string Text { get => text; set { text = value; OnPropertyChanged(); } }
         public string Username { get => username; set { username = value; OnPropertyChanged(); } }
-        public int SelF { get => sel; set { sel = value; OnPropertyChanged(); } }
+        public int SelectedFahrzeug { get => selectedFahrzeug; set { selectedFahrzeug = value; OnPropertyChanged(); } }
         public int Moves { get => moves; set { moves = value; OnPropertyChanged(); } }
-        public int SelG { get => selg; set { selg = value; OnPropertyChanged(); OnPropertyChanged(nameof(Scores)); } }
+        public int SelectedGame { get => selectedGame; set { selectedGame = value; OnPropertyChanged(); OnPropertyChanged(nameof(Scores)); } }
         public List<XML.Spiel> Spiele { get => spiele; set { spiele = value; OnPropertyChanged(); } }
-        public int Mod { get => mod; set { mod = value; } }
+        public int Scale { get => scale; set { scale = value; } }
         public int GridSize { get => gridSize; set { gridSize = value; OnPropertyChanged(); } }
-        public ObservableCollection<Score> Scores { get => new ObservableCollection<Score>(scores.Where(x => x.Lvl==SelG).OrderBy(z=> z.Moves)); set { scores = value; OnPropertyChanged(); } }
+        public ObservableCollection<Score> Scores { get => new ObservableCollection<Score>(scores.Where(x => x.Lvl == SelectedGame).OrderBy(z => z.Moves)); set { scores = value; OnPropertyChanged(); } }
         #endregion properties
 
         public ViewModel()
@@ -50,9 +50,9 @@ namespace RushHour2
         public void ResetProperties()
         {
             ViewModel _viewModel = new ViewModel();
-            SelF = 0;
+            SelectedFahrzeug = 0;
             Moves = 0;
-            SelG = _viewModel.SelG;
+            SelectedGame = _viewModel.SelectedGame;
             Spiele = _viewModel.Spiele;
         }
 
@@ -69,7 +69,7 @@ namespace RushHour2
         {
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<Score>));
             if (!File.Exists(path)) Directory.CreateDirectory(Path.GetDirectoryName(path));
-            using(StreamWriter writer = new StreamWriter(path))
+            using (StreamWriter writer = new StreamWriter(path))
             {
                 xmlSerializer.Serialize(writer, scores);
             }
@@ -97,12 +97,12 @@ namespace RushHour2
             spiel.Fahrzeug.Add(fahrzeug);
             spiel.ConvertFahreuge();
             Spiele.Add(spiel);
-            SelG = Spiele.Count - 1;
+            SelectedGame = Spiele.Count - 1;
         }
 
         public bool Geloest()
         {
-            if (SelF == 0)
+            if (SelectedFahrzeug == 0)
             {
                 Fahrzeug meinFahrzeug = GetCurrentFahrzeug();
                 foreach (Point p in meinFahrzeug.GetPosition())
@@ -138,7 +138,7 @@ namespace RushHour2
             Score score = new Score()
             {
                 Date = DateTime.Today,
-                Lvl = SelG,
+                Lvl = SelectedGame,
                 Moves = Moves,
                 Time = DateTime.Now - startTime,
                 Username = Username
@@ -243,25 +243,25 @@ namespace RushHour2
 
         public List<Fahrzeug> GetCurrentFahrzeuge()
         {
-            if (SelG > Spiele.Count - 1)
-                SelG = Spiele.Count - 1;
-            return Spiele[SelG].Fahrzeuge;
+            if (SelectedGame > Spiele.Count - 1)
+                SelectedGame = Spiele.Count - 1;
+            return Spiele[SelectedGame].Fahrzeuge;
         }
         public Fahrzeug GetCurrentFahrzeug()
         {
-            return GetCurrentFahrzeuge()[SelF];
+            return GetCurrentFahrzeuge()[SelectedFahrzeug];
         }
 
         public void Add()
         {
-            if ((SelF + 1) <= GetCurrentFahrzeuge().Count - 1)
-                SelF++;
+            if ((SelectedFahrzeug + 1) <= GetCurrentFahrzeuge().Count - 1)
+                SelectedFahrzeug++;
         }
 
         public void Sub()
         {
-            if ((SelF - 1) >= 0)
-                SelF--;
+            if ((SelectedFahrzeug - 1) >= 0)
+                SelectedFahrzeug--;
         }
 
         public void Out(string text)
@@ -290,8 +290,8 @@ namespace RushHour2
             {
                 spiel.ConvertFahreuge();
             }
-            if(games.Count-1==SelG)
-                Spiele[SelG] = games[SelG];
+            //if (games.Count - 1 == SelG)
+                Spiele[SelectedGame] = games[SelectedGame];
         }
 
 
@@ -308,8 +308,8 @@ namespace RushHour2
 
         public void SetCurrentFahrzeug(Point p)
         {
-            int x = (int)Math.Floor(p.X / Mod);
-            int y = (int)Math.Floor(p.Y / Mod);
+            int x = (int)Math.Floor(p.X / Scale);
+            int y = (int)Math.Floor(p.Y / Scale);
             int i = 0;
             foreach (Fahrzeug f in GetCurrentFahrzeuge())
             {
@@ -317,7 +317,7 @@ namespace RushHour2
                 {
                     if (pf.X == x && pf.Y == y)
                     {
-                        SelF = i;
+                        SelectedFahrzeug = i;
                         //Console.WriteLine("Sel: " + Sel);
                         return;
                     }

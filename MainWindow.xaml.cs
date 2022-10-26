@@ -82,21 +82,21 @@ namespace RushHour2
 
         private void GameMinus(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.SelG > 0)
+            if (ViewModel.SelectedGame > 0)
             {
-                ViewModel.SelG--;
-                ViewModel.SelF = 0;
-                if (ViewModel.Geloest()) ViewModel.SelG++;
+                ViewModel.SelectedGame--;
+                ViewModel.SelectedFahrzeug = 0;
+                if (ViewModel.Geloest()) ViewModel.SelectedGame++;
                 RedrawSpielfeld();
             }
         }
 
         private void GamePlus(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.SelG < ViewModel.Spiele.Count - 1)
+            if (ViewModel.SelectedGame < ViewModel.Spiele.Count - 1)
             {
-                ViewModel.SelG++;
-                ViewModel.SelF = 0;
+                ViewModel.SelectedGame++;
+                ViewModel.SelectedFahrzeug = 0;
                 RedrawSpielfeld();
             }
         }
@@ -106,13 +106,13 @@ namespace RushHour2
             if (newGrid) grid = false;
             DrawRectangles(CanvasBackground);
             CanvasGrid.Children.Clear();
-            CanvasGrid.Width = ViewModel.Mod * ViewModel.GridSize;
-            CanvasGrid.Height = ViewModel.Mod * ViewModel.GridSize;
+            CanvasGrid.Width = ViewModel.Scale * ViewModel.GridSize;
+            CanvasGrid.Height = ViewModel.Scale * ViewModel.GridSize;
             int i = 0;
             bool first = true;
             foreach (Fahrzeug fahrzeug in ViewModel.GetCurrentFahrzeuge())
             {
-                bool sel = i == ViewModel.SelF ? true : false;
+                bool sel = i == ViewModel.SelectedFahrzeug ? true : false;
                 GibFahrzeug(fahrzeug, sel, first);
                 if (first) first = false;
                 i++;
@@ -133,7 +133,7 @@ namespace RushHour2
                 GamePlus(null, null);
                 ViewModel.Text = "";
 
-                if (viewModel.SelG == viewModel.Spiele.Count - 1)
+                if (viewModel.SelectedGame == viewModel.Spiele.Count - 1)
                 {
                     MessageBox.Show("Sie haben das Spiel durchgespielt!", "Gratulation!");
                     RestartGame(this, null);
@@ -147,11 +147,11 @@ namespace RushHour2
             {
                 Fill = targetColor,
                 Opacity = .75,
-                Width = ViewModel.Mod * 1,
-                Height = ViewModel.Mod * 1
+                Width = ViewModel.Scale * 1,
+                Height = ViewModel.Scale * 1
             };
-            Canvas.SetLeft(rect, ViewModel.Mod * 5);
-            Canvas.SetTop(rect, ViewModel.Mod * 2);
+            Canvas.SetLeft(rect, ViewModel.Scale * 5);
+            Canvas.SetTop(rect, ViewModel.Scale * 2);
             CanvasGrid.Children.Add(rect);
         }
 
@@ -159,8 +159,8 @@ namespace RushHour2
         {
             System.Windows.Controls.Image image = new System.Windows.Controls.Image
             {
-                Width = ViewModel.Mod * fahrzeug.Width(),
-                Height = ViewModel.Mod * fahrzeug.Heigth(),
+                Width = ViewModel.Scale * fahrzeug.Width(),
+                Height = ViewModel.Scale * fahrzeug.Heigth(),
                 Source = new BitmapImage(new Uri("/Ressourcen/" + fahrzeug.GetImageUri(), UriKind.Relative))
             };
             double x = fahrzeug.GetPosition()[0].X;
@@ -171,8 +171,8 @@ namespace RushHour2
                 y = fahrzeug.GetPosition()[fahrzeug.GetPosition().Length - 1].Y;
             }
 
-            Canvas.SetLeft(image, ViewModel.Mod * x);
-            Canvas.SetTop(image, ViewModel.Mod * y);
+            Canvas.SetLeft(image, ViewModel.Scale * x);
+            Canvas.SetTop(image, ViewModel.Scale * y);
             CanvasGrid.Children.Add(image);
             if (first)
             {
@@ -180,11 +180,11 @@ namespace RushHour2
                 {
                     Fill = mainColor,
                     Opacity = .5,
-                    Width = ViewModel.Mod * fahrzeug.Width(),
-                    Height = ViewModel.Mod * fahrzeug.Heigth()
+                    Width = ViewModel.Scale * fahrzeug.Width(),
+                    Height = ViewModel.Scale * fahrzeug.Heigth()
                 };
-                Canvas.SetLeft(rect, ViewModel.Mod * x);
-                Canvas.SetTop(rect, ViewModel.Mod * y);
+                Canvas.SetLeft(rect, ViewModel.Scale * x);
+                Canvas.SetTop(rect, ViewModel.Scale * y);
                 CanvasGrid.Children.Add(rect);
             }
             if (sel)
@@ -193,11 +193,11 @@ namespace RushHour2
                 {
                     Fill = selectedColor,
                     Opacity = .5,
-                    Width = ViewModel.Mod * fahrzeug.Width(),
-                    Height = ViewModel.Mod * fahrzeug.Heigth()
+                    Width = ViewModel.Scale * fahrzeug.Width(),
+                    Height = ViewModel.Scale * fahrzeug.Heigth()
                 };
-                Canvas.SetLeft(rect, ViewModel.Mod * x);
-                Canvas.SetTop(rect, ViewModel.Mod * y);
+                Canvas.SetLeft(rect, ViewModel.Scale * x);
+                Canvas.SetTop(rect, ViewModel.Scale * y);
                 CanvasGrid.Children.Add(rect);
             }
         }
@@ -207,21 +207,21 @@ namespace RushHour2
             if (!grid)
             {
                 MyCanvas.Children.RemoveRange(1, MyCanvas.Children.Count - 1);
-                MyCanvas.Width = ViewModel.Mod * ViewModel.GridSize;
-                MyCanvas.Height = ViewModel.Mod * ViewModel.GridSize;
+                MyCanvas.Width = ViewModel.Scale * ViewModel.GridSize;
+                MyCanvas.Height = ViewModel.Scale * ViewModel.GridSize;
                 for (int j = 0; j < ViewModel.GridSize; j++)
                 {
                     for (int i = 0; i < ViewModel.GridSize; i++)
                     {
                         System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle
                         {
-                            Height = ViewModel.Mod,
-                            Width = ViewModel.Mod,
+                            Height = ViewModel.Scale,
+                            Width = ViewModel.Scale,
                         };
                         rectangle.Stroke = System.Windows.Media.Brushes.Black;
                         rectangle.Fill = System.Windows.Media.Brushes.LightGray;
-                        Canvas.SetLeft(rectangle, i * ViewModel.Mod);
-                        Canvas.SetTop(rectangle, j * ViewModel.Mod);
+                        Canvas.SetLeft(rectangle, i * ViewModel.Scale);
+                        Canvas.SetTop(rectangle, j * ViewModel.Scale);
                         MyCanvas.Children.Add(rectangle);
                     }
                 }
@@ -262,7 +262,7 @@ namespace RushHour2
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            ViewModel.Mod =(int) (this.ActualHeight * 0.6 / ViewModel.GridSize);
+            ViewModel.Scale =(int) (this.ActualHeight * 0.6 / ViewModel.GridSize);
             RedrawSpielfeld(true);
         }
 
