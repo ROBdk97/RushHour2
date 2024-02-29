@@ -204,6 +204,8 @@ namespace RushHour2
             if (result != null)
             {
                 Scores.Add(result);
+                // order scores by points
+                Scores = new ObservableCollection<Score>(Scores.OrderByDescending(s => s.Points));
                 OnPropertyChanged(nameof(Scores));
                 Erfolg erfolgWindow = new Erfolg
                 {
