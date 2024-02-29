@@ -10,10 +10,14 @@
     <ApplicationIcon>Ressourcen\parkplatzSymbol.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Ressourcen\GitHub.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Ressourcen\ArrowDown.png" />
     <Resource Include="Ressourcen\ArrowLeft.png" />
     <Resource Include="Ressourcen\ArrowRight.png" />
     <Resource Include="Ressourcen\ArrowUp.png" />
+    <Resource Include="Ressourcen\GitHub.png" />
     <Resource Include="Ressourcen\lkw_down.bmp" />
     <Resource Include="Ressourcen\lkw_left.bmp" />
     <Resource Include="Ressourcen\lkw_right.bmp" />
@@ -28,9 +32,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Ressourcen\ROB.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Ressourcen\BSB_LOGOsmall.jpg" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />

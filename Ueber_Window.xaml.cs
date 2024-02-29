@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -16,12 +17,28 @@ namespace RushHour2
 
         private void Button_Click_URL_ROB(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://rob-games.zapto.org/");
+            var url = "https://rob-games.zapto.org/";
+            try
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
 
-        private void Button_Click_URL_Schule(object sender, RoutedEventArgs e)
+        private void Button_Click_URL_Github(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://www.berufliche-schulen-bretten.de/");
+            var url = "https://github.com/ROBdk97/RushHour2";
+            try
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
     }
 }
