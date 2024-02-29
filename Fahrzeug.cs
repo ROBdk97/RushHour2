@@ -102,7 +102,7 @@ namespace RushHour2
                 case "l":
                     return type + "right.bmp";
                 default:
-                    return "";
+                    return string.Empty;
             }
         }
 

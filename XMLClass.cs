@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace RushHour2.XML
+namespace RushHour2
 {
     [XmlRoot(ElementName = "Fahrzeug")]
     public class FahrzeugX
@@ -10,6 +10,7 @@ namespace RushHour2.XML
         public FahrzeugX()
         {
         }
+
         public FahrzeugX(double x, double y, int leange, string ausrichtung)
         {
             X = x;
@@ -34,14 +35,14 @@ namespace RushHour2.XML
     [XmlRoot(ElementName = "spiel")]
     public class Spiel
     {
-
         [XmlElement(ElementName = "Fahrzeug")]
         public List<FahrzeugX> Fahrzeug { get; set; }
+
         [XmlIgnore]
         public List<Fahrzeug> Fahrzeuge { get; set; }
+
         public Spiel()
         {
-
         }
 
         public void ConvertFahreuge()
@@ -61,32 +62,12 @@ namespace RushHour2.XML
                 this.Fahrzeuge.Add(f);
             }
         }
-
     }
 
     [XmlRoot(ElementName = "RushHour")]
     public class RushHourXML
     {
-
         [XmlElement(ElementName = "spiel")]
         public List<Spiel> Spiele { get; set; }
-    }
-
-}
-
-namespace RushHour2
-{
-    public static class XMLHelper
-    {
-        public static List<XML.Spiel> LoadXML(Stream path)
-        {
-            XML.RushHourXML xml = new XML.RushHourXML();
-            XmlSerializer serializer = new XmlSerializer(typeof(XML.RushHourXML));
-            using (StreamReader reader = new StreamReader(path))
-            {
-                xml = (XML.RushHourXML)serializer.Deserialize(reader);
-            }
-            return xml.Spiele;
-        }
     }
 }

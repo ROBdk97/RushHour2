@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+using System.Text.Json.Serialization;
 
 namespace RushHour2
 {
@@ -14,15 +11,32 @@ namespace RushHour2
         private DateTime date;
         private int moves;
         private TimeSpan time;
+        private int score;
 
 
+        public int Id { get; set; }
         public int Lvl { get => lvl; set { lvl = value; OnPropertyChanged(); } }
         public string Username { get => username; set { username = value; OnPropertyChanged(); } }
         public DateTime Date { get => date; set { date = value; OnPropertyChanged(); } }
         public int Moves { get => moves; set { moves = value; OnPropertyChanged(); } }
-        [XmlIgnore]
-        public TimeSpan Time { get => time; set { time = value; OnPropertyChanged(); } }
-        [XmlElement]
-        public long TimeSp { get => Time.Ticks; set { Time = TimeSpan.FromTicks(value); } }
+        [JsonIgnore]
+        public TimeSpan Time
+        {
+            get => time;
+            set { time = value; OnPropertyChanged(); }
+        }
+        public long TimeSp { get => Time.Ticks; set { Time = TimeSpan.FromTicks(value); OnPropertyChanged(); } }
+        // only calculated by the api
+        public int Points { get => score; set { score = value; OnPropertyChanged(); } }
+        [JsonIgnore]
+        public string DisplayText
+        {
+            get
+            {
+                return $"Punkte: {Points} \nBenötigte Zeit: {Time:mm\\:ss\\:fff} \nBenötigte Züge: {Moves}";
+            }
+        }
+
+
     }
 }

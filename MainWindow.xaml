@@ -3,13 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RushHour2"
+        xmlns:local="clr-namespace:RushHour2" d:DataContext="{d:DesignInstance Type=local:ViewModel}"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         SizeChanged="Window_SizeChanged"         
         PreviewKeyDown="Window_PreviewKeyDown"
         Closed="Window_Closed"
         Title="RushHour" Height="600" Width="800">
+    <Window.Resources>
+        <local:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -20,8 +23,9 @@
                 <MenuItem Header="Spiel">
                     <MenuItem Header="Level Neustarten" Click="Restart"/>
                     <MenuItem Header="Spiel Neustarten" Click="RestartGame"/>
+                    <MenuItem Header="Benutzername ändern" Click="ChangeUserName"/>
                     <MenuItem Header="XML Importieren" Click="ImportXML"/>
-                    <MenuItem Header="Aus String Importieren" Click="MenuItem_Click_AusString"/>
+                    <MenuItem Header="XML Exportieren" Click="MenuItem_Click_Export"/>
                 </MenuItem>
                 <MenuItem Header="Hilfe">
                     <MenuItem Header="Hilfe" Click="MenuItem_Click_Anleitung"/>
@@ -38,7 +42,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="200"/>
-                        <RowDefinition/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" VerticalAlignment="Center">
                         <Border BorderBrush="Black" BorderThickness="1" Height="90" Padding="2">
@@ -89,27 +93,28 @@
                                     <Button Content="-" Click="GameMinus"  Grid.Column="0"/>
                                     <Button Content="+" Click="GamePlus" Grid.Column="1"/>
                                 </Grid>
-                                <TextBlock Text="{Binding SelG}" Height="20" TextAlignment="Center" Grid.Row="2"/>
+                                <TextBlock Text="{Binding SelectedGame}" Height="20" TextAlignment="Center" Grid.Row="2"/>
                             </Grid>
                         </Border>
                         <Border BorderBrush="Black" BorderThickness="1" Height="25" Padding="2">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="5"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Benutzername:" Grid.Column="0"/>
-                                <TextBox Grid.Column="1" Text="{Binding Username}" AutoWordSelection="True" KeyDown="UsernameTextBox_KeyDown"/>
+                                <TextBlock Grid.Column="2" Text="{Binding Username}" TextAlignment="Center"/>
                             </Grid>
                         </Border>
                     </StackPanel>
-                    <!--<TextBox Text="{Binding Text}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" IsReadOnly="True" Grid.Row="1"/>-->
-                    <DataGrid ItemsSource="{Binding Scores}"  ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False">
+                    <DataGrid ItemsSource="{Binding Scores}"  ScrollViewer.CanContentScroll="True" IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Username}" Header="Spieler"/>
-                            <DataGridTextColumn Binding="{Binding Moves}" Header="Schritte"/>
-                            <DataGridTextColumn Binding="{Binding Time}" Header="Zeit"/>
-                            <DataGridTextColumn Binding="{Binding Date, StringFormat=\{0:dd.MM.yyyy\}}" Header="Tag"/>
+                            <DataGridTextColumn Binding="{Binding Points}" Header="Punkte"/>
+                            <DataGridTextColumn Binding="{Binding Moves}" Header="Züge"/>
+                            <DataGridTextColumn Binding="{Binding Time, Converter={StaticResource TimeSpanToStringConverter}}" Header="Zeit (m:s:ms)" />
+                            <DataGridTextColumn Binding="{Binding Date, StringFormat='{}{0:dd.MM.yyyy}'}" Header="Tag"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

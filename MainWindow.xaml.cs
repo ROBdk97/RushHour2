@@ -69,7 +69,6 @@ namespace RushHour2
         {
             ViewModel.ReloadLevel();
             ViewModel.Moves = 0;
-            ViewModel.StartTime();
             RedrawSpielfeld();
         }
 
@@ -121,17 +120,8 @@ namespace RushHour2
             if (ViewModel.Geloest())
             {
                 ViewModel.Finished();
-                Erfolg erfolgWindow = new Erfolg
-                {
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                    Owner = this,
-                    DataContext = ViewModel                  
-                };
-                erfolgWindow.ShowDialog();
-                ViewModel.StartTime();
-                ViewModel.Moves = 0;
                 GamePlus(null, null);
-                ViewModel.Text = "";
+                ViewModel.Text = string.Empty;
 
                 if (viewModel.SelectedGame == viewModel.Spiele.Count - 1)
                 {
@@ -262,7 +252,7 @@ namespace RushHour2
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            ViewModel.Scale =(int) (this.ActualHeight * 0.6 / ViewModel.GridSize);
+            ViewModel.Scale = (int)(this.ActualHeight * 0.6 / ViewModel.GridSize);
             RedrawSpielfeld(true);
         }
 
@@ -287,9 +277,9 @@ namespace RushHour2
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
-            {               
+            {
                 case Key.W:
-                    GoUp(null,null);
+                    GoUp(null, null);
                     break;
                 case Key.S:
                     GoDown(null, null);
@@ -305,13 +295,13 @@ namespace RushHour2
                     break;
                 case Key.H:
                     ShowHelp();
-                    break;               
+                    break;
             }
         }
 
         private void UsernameTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 this.UpButton.Focus();
             }
@@ -319,7 +309,7 @@ namespace RushHour2
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            ViewModel.SaveScoreBoard();
+            ViewModel.SaveSettings();
         }
 
         #region PropertyChanged
@@ -329,5 +319,22 @@ namespace RushHour2
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
         #endregion PropertyChanged
+
+        private void ChangeUserName(object sender, RoutedEventArgs e)
+        {
+            // open a new window to change the username
+            UsernameWindow changeUsernameWindow = new()
+            {
+                Owner = this
+            };
+            changeUsernameWindow.ShowDialog();
+            if (!string.IsNullOrWhiteSpace(changeUsernameWindow.Username))
+                ViewModel.Username = changeUsernameWindow.Username;
+        }
+
+        private void MenuItem_Click_Export(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ExportXML();
+        }
     }
 }

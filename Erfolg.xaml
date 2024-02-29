@@ -5,17 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RushHour2"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignData Type=local:Score}"
         WindowStyle="ToolWindow"
         ResizeMode="NoResize"
-        Title="Erfolg" Height="100" Width="250">
+        Title="Erfolg" Height="140" Width="250">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-            <TextBlock Text="Level Abgeschlossen!" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="0"/>
-            <TextBlock Text="{Binding Moves,StringFormat=Benötigte Schritte: {0:0}}" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="1"/>
+            <TextBlock Text="Level Abgeschlossen!" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="0" FontWeight="Bold"/>
+            <TextBlock Text="{Binding DisplayText}" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Grid.Row="1"/>
             <Button Content="Nächstes Level" Click="Button_Click" Grid.Row="2"/>
     </Grid>
 </Window>
