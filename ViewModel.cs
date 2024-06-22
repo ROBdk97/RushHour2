@@ -450,9 +450,9 @@ namespace RushHour2
         private Settings settings;
         private readonly string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
             "\\ROBdk97\\RushHour\\Settings.xml";
-        private const string getScores = "https://rob-games.zapto.org:4447/api/RushHour/scores";
-        private const string postScores = "https://rob-games.zapto.org:4447/api/RushHour/score";
-        private const string getLvl = "https://rob-games.zapto.org:4447/api/RushHour/level?level=";
+        private const string getScores = "https://api.rob-games.zapto.org/api/RushHour/scores";
+        private const string postScores = "https://api.rob-games.zapto.org/api/RushHour/score";
+        private const string getLvl = "https://api.rob-games.zapto.org/api/RushHour/level?level=";
         #endregion private
 
         #region properties
